@@ -1,5 +1,3 @@
-// In previous lessons, we've converted response into slices of bytes, and then strings.
-// Now, we decode the response data directly into a slice of structs and return that instead!
 package main
 
 import (
@@ -19,26 +17,18 @@ func getIssue(url string) (*Response, error) {
 	}
 	defer res.Body.Close()
 
-	// Create a nil slice of resp
+	// Create a struct variable
 	var resp Response
 
 	// Create a new decoder
 	decoder := json.NewDecoder(res.Body)
 
-	// Decode the response body into the resp slice
+	// Decode the response body into the struct
 	if err := decoder.Decode(&resp); err != nil {
 		return nil, fmt.Errorf("error decoding response: %w", err)
 	}
 
 	return &resp, nil
-}
-
-func prettyPrint(v interface{}) {
-	b, err := json.MarshalIndent(v, "", "  ")
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-	fmt.Println(string(b))
 }
 
 func main() {
@@ -47,22 +37,22 @@ func main() {
 		log.Fatalf("error getting issue data: %v", err)
 	}
 
-	fmt.Println("----------- ways to print out the results -----------")
-
-	// 	Use reflection to iterate over struct fields
+	//1. Use reflection to iterate over struct fields
 	v := reflect.ValueOf(*resp)
-	typeOfS := v.Type()
+	typeOfS := v.Type() // Gets type info of a value
 
-	for i := 0; i < v.NumField(); i++ {
+	// NumField returns the number of fields in the struct
+	// Field returns the i'th field of the struct v
+	for i := range v.NumField() {
 		fmt.Printf("%s: %v\n", typeOfS.Field(i).Name, v.Field(i).Interface())
 	}
 
-	fmt.Println("=== Full Response Structure ===")
-	prettyPrint(resp)
+	// ----------------------------------------------
 
-	// Let's also print just one data item to compare
-	fmt.Println("\n=== First Data Item Only ===")
-	if len(resp.Data) > 0 {
-		prettyPrint(resp.Data[0])
+	// 2. Use MarshalIndent
+	b, err := json.MarshalIndent(resp, "", "  ")
+	if err != nil {
+		fmt.Println("error:", err)
 	}
+	fmt.Println(string(b))
 }
