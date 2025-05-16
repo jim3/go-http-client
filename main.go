@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-const url = "https://api.shodan.io/shodan/host/8.8.8.8?key=APIKEY"
+const url = "https://api.shodan.io/shodan/host/IPADDR?key=APIKEY"
 
 // getIssue sends an HTTP GET request to the specified URL and decodes the JSON response
 // into a Response struct. It returns a pointer to the Response struct and an error if
