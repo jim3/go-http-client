@@ -19,36 +19,55 @@ const url = "https://api.shodan.io/shodan/host/IPADDR?key=APIKEY"
 // Returns:
 //   - *Response: Pointer to the decoded Response struct.
 //   - error: An error if the request or decoding fails.
-func getIssue(url string) (*Response, error) {
+func getIpInfo(url string) (*Response, error) {
 	res, err := http.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 	defer res.Body.Close()
 
-	// Create a struct variable
+	// Create a nil slice of resp
 	var resp Response
 
 	// Create a new decoder
 	decoder := json.NewDecoder(res.Body)
 
-	// Decode the response body into the struct
+	// Decode the response body into the resp slice
 	if err := decoder.Decode(&resp); err != nil {
 		return nil, fmt.Errorf("error decoding response: %w", err)
 	}
+
 	return &resp, nil
 }
 
-func main() {
-	resp, err := getIssue(url)
-	if err != nil {
-		log.Fatalf("error getting issue data: %v", err)
-	}
-
-	// Pretty print the response
-	b, err := json.MarshalIndent(resp, "", "  ")
+func prettyPrint(v any) {
+	b, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
 		fmt.Println("error:", err)
 	}
 	fmt.Println(string(b))
+}
+
+func main() {
+	resp, err := getIpInfo(url)
+	if err != nil {
+		log.Fatalf("error getting issue data: %v", err)
+	}
+
+	// 	Use reflection to iterate over struct fields
+	v := reflect.ValueOf(*resp)
+	typeOfS := v.Type()
+
+	for i := 0; i < v.NumField(); i++ {
+		fmt.Printf("%s: %v\n", typeOfS.Field(i).Name, v.Field(i).Interface())
+	}
+
+	fmt.Println("=== Full Response Structure ===")
+	prettyPrint(resp)
+
+	// Let's also print just one data item to compare
+	fmt.Println("\n=== First Data Item Only ===")
+	if len(resp.Data) > 0 {
+		prettyPrint(resp.Data[0])
+	}
 }
