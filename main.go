@@ -54,14 +54,6 @@ func main() {
 		log.Fatalf("error getting issue data: %v", err)
 	}
 
-	// 	Use reflection to iterate over struct fields
-	v := reflect.ValueOf(*resp)
-	typeOfS := v.Type()
-
-	for i := 0; i < v.NumField(); i++ {
-		fmt.Printf("%s: %v\n", typeOfS.Field(i).Name, v.Field(i).Interface())
-	}
-
 	fmt.Println("=== Full Response Structure ===")
 	prettyPrint(resp)
 
