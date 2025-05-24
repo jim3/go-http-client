@@ -9,7 +9,7 @@ import (
 
 const url = "https://api.shodan.io/shodan/host/IPADDR?key=APIKEY"
 
-// getIssue sends an HTTP GET request to the specified URL and decodes the JSON response
+// getIpInfo sends an HTTP GET request to the specified URL and decodes the JSON response
 // into a Response struct. It returns a pointer to the Response struct and an error if
 // the request fails or the response cannot be decoded.
 //
@@ -51,7 +51,7 @@ func prettyPrint(v any) {
 func main() {
 	resp, err := getIpInfo(url)
 	if err != nil {
-		log.Fatalf("error getting issue data: %v", err)
+		log.Fatalf("error getting data: %v", err)
 	}
 
 	fmt.Println("=== Full Response Structure ===")
