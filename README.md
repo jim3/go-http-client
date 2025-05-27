@@ -1,6 +1,7 @@
-An HTTP client that interacts with the Shodan API
+#### An HTTP client that interacts with the Shodan API
 
-### Usage
+**Usage**
+
 `git clone https://github.com/jim3/go-http-client.git`
 
 `go run .`
