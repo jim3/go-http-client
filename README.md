@@ -1,4 +1,4 @@
-#### An HTTP client that interacts with the Shodan API
+### An HTTP client that interacts with the Shodan API
 
 **Usage**
 
